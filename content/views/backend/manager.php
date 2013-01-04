@@ -119,20 +119,20 @@ $riview->get('loader')->load(array('jquery.lib', 'bootstrap.lib', 'jquery.ui.lib
                                 </label>
                             </div>
                         </div>
-                        <div class="control-group">
-                            <a class="control-label"
-                               title="""><?php rie('Options') ?></a>
-                            <div class="controls">
-                                <label class="checkbox">
-                                    <input type="checkbox" value="noarchive" name="metas[robots]">
-                                    NOARCHIVE
-                                </label>
-                                <label class="checkbox">
-                                    <input type="checkbox" value="nosnippet" name="metas[robots]">
-                                    NOSNIPPET
-                                </label>
-                            </div>
-                        </div>
+<!--                        <div class="control-group">-->
+<!--                            <a class="control-label"-->
+<!--                               title=""">--><?php //rie('Options') ?><!--</a>-->
+<!--                            <div class="controls">-->
+<!--                                <label class="checkbox">-->
+<!--                                    <input type="checkbox" value="noarchive" name="metas[robots]">-->
+<!--                                    NOARCHIVE-->
+<!--                                </label>-->
+<!--                                <label class="checkbox">-->
+<!--                                    <input type="checkbox" value="nosnippet" name="metas[robots]">-->
+<!--                                    NOSNIPPET-->
+<!--                                </label>-->
+<!--                            </div>-->
+<!--                        </div>-->
                     </div>
                     <div class="input-group" id="additional-meta-input-group">
                         <div class="control-group" id="addtional-metas">

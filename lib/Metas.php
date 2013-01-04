@@ -1,10 +1,10 @@
 <?php
-/**
- * Created by RubikIntegration Team.
- * Date: 12/20/12
- * Time: 9:58 AM
- * Question? Come to our website at http://rubikin.com
- */
+    /**
+     * Created by RubikIntegration Team.
+     * Date: 12/20/12
+     * Time: 9:58 AM
+     * Question? Come to our website at http://rubikin.com
+     */
 
 namespace plugins\riSeo;
 
@@ -166,54 +166,61 @@ class Metas extends \plugins\riCore\ParameterBag
 
         $metas = "\r\n";
         foreach ($this->get('metas') as $key => $value) {
-//            echo $key . " is " . $value;
-            $metas .= str_replace(array('%key%', '%value%'), array($key, $value), $this->get('template.' . $key, '<meta name="%key%" content="%value%" />')) . "\r\n";
-        }
-        $content = str_replace('<head>', '<head>' . $metas, $content);
-        return $content;
-    }
 
-    /**
-     * Check database whether certain Meta exist or not
-     *
-     * @param   string  $name   Meta name
-     * @param   integer $seo_id Foreign key to meta_data table to identify certain page
-     * @return  boolean
-     *
-     */
-    private function isMetaExist($name, $seo_id)
-    {
-        global $db;
-        $sql = "SELECT *
+            if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($current_page_base, explode(",", constant('ROBOTS_PAGES_TO_SKIP'))) || $current_page_base == 'down_for_maintenance' || $robotsNoIndex === true) {
+
+            }
+
+            $metas .= str_replace(array('%key%', '%value%'), array($key, $value), $this->get('template.' . $key, '
+            <meta name="%key%" content="%value%"/>')) . "\r\n";
+            }
+            $content = str_replace('
+            <head>', '
+            <head>' . $metas, $content);
+                return $content;
+                }
+
+                /**
+                * Check database whether certain Meta exist or not
+                *
+                * @param string $name Meta name
+                * @param integer $seo_id Foreign key to meta_data table to identify certain page
+                * @return boolean
+                *
+                */
+                private function isMetaExist($name, $seo_id)
+                {
+                global $db;
+                $sql = "SELECT *
                 FROM " . TABLE_META_DATA . "
                 WHERE seo_id = :seo_id
                 AND meta_name = :meta_name";
 
-        $sql = $db->bindVars($sql, ":seo_id", $seo_id, 'string');
-        $sql = $db->bindVars($sql, ":meta_name", $name, 'string');
-        $result = $db->Execute($sql);
+                $sql = $db->bindVars($sql, ":seo_id", $seo_id, 'string');
+                $sql = $db->bindVars($sql, ":meta_name", $name, 'string');
+                $result = $db->Execute($sql);
 
-        if ($result->RecordCount() > 0) {
+                if ($result->RecordCount() > 0) {
 
-            return true;
-        }
+                return true;
+                }
 
-        return false;
-    }
+                return false;
+                }
 
-    /**
-     * Delete single meta with seo_id in table seo_meta and name
-     *
-     * @param integer $seo_id
-     * @param string $name
-     *
-     */
-    public function deleteSingleMeta($seo_id, $meta_name)
-    {
-        global $db;
-        $sql = "DELETE FROM " . TABLE_META_DATA . " WHERE seo_id = :seo_id AND meta_name = :meta_name";
-        $sql = $db->bindVars($sql, ":seo_id", $seo_id, 'integer');
-        $sql = $db->bindVars($sql, ":meta_name", $meta_name, 'string');
-        $db->Execute($sql);
-    }
-}
+                /**
+                * Delete single meta with seo_id in table seo_meta and name
+                *
+                * @param integer $seo_id
+                * @param string $name
+                *
+                */
+                public function deleteSingleMeta($seo_id, $meta_name)
+                {
+                global $db;
+                $sql = "DELETE FROM " . TABLE_META_DATA . " WHERE seo_id = :seo_id AND meta_name = :meta_name";
+                $sql = $db->bindVars($sql, ":seo_id", $seo_id, 'integer');
+                $sql = $db->bindVars($sql, ":meta_name", $meta_name, 'string');
+                $db->Execute($sql);
+                }
+                }
