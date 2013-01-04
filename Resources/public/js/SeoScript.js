@@ -207,7 +207,6 @@ $(document).ready(function () {
                 $("<a>")
                     .attr("tabIndex", -1)
                     .attr("title", "Show All Items")
-                    .tooltip()
                     .appendTo(wrapper)
                     .button({
                         icons:{
@@ -233,13 +232,13 @@ $(document).ready(function () {
                         input.focus();
                     });
 
-                input
-                    .tooltip({
-                        position:{
-                            of:this.button
-                        },
-                        tooltipClass:"ui-state-highlight"
-                    });
+//                input
+//                    .tooltip({
+//                        position:{
+//                            of:this.button
+//                        },
+//                        tooltipClass:"ui-state-highlight"
+//                    });
             },
 
             destroy:function () {

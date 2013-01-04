@@ -107,6 +107,6 @@ a {
     /*top:50%;*/
     /*margin-left:-200px; *//*image width/2 */
     /*margin-top:-200px; *//*image height/2 */
-    background: url("loading.gif") no-repeat center;
+    background: url("../images/loading.gif") no-repeat center;
 
 }

@@ -10,15 +10,17 @@ namespace plugins\riSeo;
 
 use plugins\riPlugin\Plugin;
 
-class Metas extends \plugins\riCore\ParameterBag
+class Metas extends \Zepluf\Bundle\StoreBundle\ParameterBag
 {
-    var $meta = array();
+    protected $meta = array();
+    protected $settings;
 
     /**
      * Constructor
      */
-    public function __construct()
+    public function __construct($settings)
     {
+        $this->settings = $settings;
         $this->set('template.title', '<title>%value%</title>');
     }
 
@@ -33,6 +35,7 @@ class Metas extends \plugins\riCore\ParameterBag
      */
     public function getMeta($main_page, $page_id = 0, $isAdmin = false)
     {
+
         global $db;
         $sql = "SELECT sm.seo_id, sm.page_id, smd.meta_name, smd.meta_content
                 FROM " . TABLE_META . " sm
@@ -57,7 +60,7 @@ class Metas extends \plugins\riCore\ParameterBag
             }
         }
 
-        $fallback = (bool)Plugin::get('settings')->get("zencart_fallback");
+        $fallback = (bool)$this->settings->get('plugins.riseo.zencart_fallback');
         if ($fallback) {
             if ((!isset($meta['metas']['title']) || !isset($meta['metas']['description']) || !isset($meta['metas']['keywords']))) {
                 $current_page = $_GET['main_page'];

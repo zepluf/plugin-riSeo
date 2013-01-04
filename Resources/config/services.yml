@@ -1,0 +1,6 @@
+parameters:
+  riseo.metas.class: plugins\riSeo\Metas
+services:
+  riseo.metas:
+    class: %riseo.metas.class%
+    arguments: [@settings]

@@ -9,17 +9,16 @@
 
 namespace plugins\riSeo;
 
-use plugins\riCore\PluginCore;
-use plugins\riPlugin\Plugin;
-use plugins\riCore\Event;
+use Zepluf\Bundle\StoreBundle\PluginCore;
+use Zepluf\Bundle\StoreBundle\Event\CoreEvent;
+use Zepluf\Bundle\StoreBundle\Events;
 
 class RiSeo extends PluginCore
 {
-
     public function init()
     {
         if (!IS_ADMIN_FLAG) {
-            Plugin::get('dispatcher')->addListener(\plugins\riCore\Events::onPageEnd, array($this, 'onPageEnd'));
+            $this->container->get('event_dispatcher')->addListener(Events::onPageEnd, array($this, 'onPageEnd'));
 
 //            global $autoLoadConfig;
 //            $autoLoadConfig[190][] = array('autoType' => 'include', 'loadFile' => __DIR__ . '/lib/observers.php');
@@ -29,7 +28,7 @@ class RiSeo extends PluginCore
     public function onPageEnd(Event $event)
     {
         $content = & $event->getContent();
-        $content = Plugin::get('riSeo.Metas')->processMeta($content, $_GET['main_page'], $_GET['id']);
+        $content = $this->container->get('riSeo.Metas')->processMeta($content);
         $event->setContent($content);
 
         return $event;
@@ -45,13 +44,12 @@ class RiSeo extends PluginCore
 //            $messageStack->add("Please remove meta tags in your 'html_header' file", 'error');
 //            return false;
 //        } else {
-        return Plugin::get('riCore.DatabasePatch')->executeSqlFile(file(__DIR__ . '/install/sql/install.sql'));
+        return $this->container->get('database_patcher')->executeSqlFile(file(__DIR__ . '/install/sql/install.sql'));
 //        }
-
     }
 
     public function uninstall()
     {
-        return Plugin::get('riCore.DatabasePatch')->executeSqlFile(file(__DIR__ . '/install/sql/uninstall.sql'));
+        return $this->container->get('database_patcher')->executeSqlFile(file(__DIR__ . '/install/sql/uninstall.sql'));
     }
 }

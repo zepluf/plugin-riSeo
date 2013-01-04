@@ -1,0 +1,37 @@
+routes:
+  admin_seo:
+    pattern:  /manager/
+    defaults: { _controller: plugins\riSeo\Controller\AdminSEOController::indexAction }
+
+  ajax_get_page_meta:
+    pattern:  /ajax_get_page_meta/
+    defaults: { _controller: plugins\riSeo\Controller\AdminSEOController::ajaxGetPageMeta }
+
+  ajax_save_page_meta:
+      pattern:  /ajax_save_page_meta/
+      defaults: { _controller: plugins\riSeo\Controller\AdminSEOController::ajaxSavePageMeta }
+
+  ajax_delete_page_meta:
+        pattern:  /ajax_delete_page_meta/
+        defaults: { _controller: plugins\riSeo\Controller\AdminSEOController::ajaxDeletePageMeta }
+
+  ajax_delete_single_meta:
+        pattern:  /ajax_delete_single_meta/
+        defaults: { _controller: plugins\riSeo\Controller\AdminSEOController::ajaxDeleteSingleMeta }
+
+
+global:    
+  backend:
+    menu:
+      extras:
+        - {text: SEO Manager, link: ri.php/riseo/admin_seo/}
+
+zencart_fallback: true
+
+exclude_pages:
+    - about_us
+    - account
+    - address_book
+    - contact_us
+
+
