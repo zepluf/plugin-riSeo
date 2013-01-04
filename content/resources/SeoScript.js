@@ -134,8 +134,7 @@ $(document).ready(function () {
                             });
 
                             var page = $("#combobox").val();
-                            alert($("#combobox option:selected").val());
-                            alert($("#combobox option:selected").text());
+
                             $("#main-page").val(page);
                             //code to send ajax request to get page meta info here
                             $.ajax({

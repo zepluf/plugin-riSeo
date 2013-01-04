@@ -1,10 +1,10 @@
 <?php
-    /**
-     * Created by RubikIntegration Team.
-     * Date: 12/20/12
-     * Time: 9:58 AM
-     * Question? Come to our website at http://rubikin.com
-     */
+/**
+ * Created by RubikIntegration Team.
+ * Date: 12/20/12
+ * Time: 9:58 AM
+ * Question? Come to our website at http://rubikin.com
+ */
 
 namespace plugins\riSeo;
 
@@ -25,21 +25,26 @@ class Metas extends \plugins\riCore\ParameterBag
     /**
      * Get meta data by page
      *
-     * @param string $page
+     * @param string $main_page
+     * @param string $page_id
+     * @param boolean $isAdmin
      * @return array
      *
      */
-    public function getMeta($page, $isAdmin = false)
+    public function getMeta($main_page, $page_id = 0, $isAdmin = false)
     {
         global $db;
         $sql = "SELECT sm.seo_id, sm.page_id, smd.meta_name, smd.meta_content
                 FROM " . TABLE_META . " sm
                 INNER JOIN " . TABLE_META_DATA . " smd
                 ON sm.seo_id = smd.seo_id
-                WHERE sm.main_page = :page
+                WHERE sm.main_page = :main_page
+                AND sm.page_id = :page_id
                 ORDER BY smd.seo_meta_data_id";
 
-        $sql = $db->bindVars($sql, ":page", $page, 'string');
+        $sql = $db->bindVars($sql, ":main_page", $main_page, 'string');
+        $sql = $db->bindVars($sql, ":page_id", $page_id, 'integer');
+
         $result = $db->Execute($sql);
         if ($result->RecordCount() > 0) {
             $meta['seo_id'] = $result->fields['seo_id'];
@@ -56,7 +61,7 @@ class Metas extends \plugins\riCore\ParameterBag
         if ($fallback) {
             if ((!isset($meta['metas']['title']) || !isset($meta['metas']['description']) || !isset($meta['metas']['keywords']))) {
                 $current_page = $_GET['main_page'];
-                $_GET['main_page'] = $page;
+                $_GET['main_page'] = $main_page;
                 /// code cho cai module
                 /// $_GET['main_page'] = $current_page;
 //                require($_SERVER['DOCUMENT_ROOT'] . '/includes/modules/meta_tags.php');
@@ -131,30 +136,46 @@ class Metas extends \plugins\riCore\ParameterBag
      * Check the main page, get meta data and inject into given content
      *
      * @param string $content
+     * @param string $page
      * @return string
      *
      */
-    public function processMeta(&$content)
+    public function processMeta(&$content, $main_page, $page_id = 0)
     {
-        //get POST page meta data
-        $page = $_GET['main_page'];
-        $this->meta = $this->getMeta($page);
+        $this->meta = $this->getMeta($main_page, $page_id);
         if (!empty($this->meta)) {
             //inject meta data into content and return
-            return $this->injectMetas($content);
+            return $this->injectMetas($content, $main_page);
         }
         //return original content
         return $content;
     }
 
     /**
+     * Delete single meta with seo_id in table seo_meta and name
+     *
+     * @param integer $seo_id
+     * @param string $meta_name
+     *
+     */
+    public function deleteSingleMeta($seo_id, $meta_name)
+    {
+        global $db;
+        $sql = "DELETE FROM " . TABLE_META_DATA . " WHERE seo_id = :seo_id AND meta_name = :meta_name";
+        $sql = $db->bindVars($sql, ":seo_id", $seo_id, 'integer');
+        $sql = $db->bindVars($sql, ":meta_name", $meta_name, 'string');
+        $db->Execute($sql);
+    }
+
+    /**
      * Inject meta data into HTML rendered content
      *
      * @param string $content
+     * @param string $page
      * @return string
      *
      */
-    private function injectMetas(&$content)
+    private function injectMetas(&$content, $page)
     {
         foreach ($this->meta['metas'] as $key => $value) {
             if (!$this->has("metas." . $key . "")) {
@@ -165,62 +186,82 @@ class Metas extends \plugins\riCore\ParameterBag
         }
 
         $metas = "\r\n";
+
+//        $found_robot_meta = false;
         foreach ($this->get('metas') as $key => $value) {
-
-            if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($current_page_base, explode(",", constant('ROBOTS_PAGES_TO_SKIP'))) || $current_page_base == 'down_for_maintenance' || $robotsNoIndex === true) {
-
+            if ($key == "robots") {
+                $found_robot_meta = true;
             }
+            $metas .= str_replace(array('%key%', '%value%'), array($key, $value), $this->get('template.' . $key, '<meta name="%key%" content="%value%"/>')) . "\r\n";
+        }
 
-            $metas .= str_replace(array('%key%', '%value%'), array($key, $value), $this->get('template.' . $key, '
+        if (!$found_robot_meta) {
+            if ($this->checkRobots($page)) {
+                $metas .= str_replace(array('%key%', '%value%'), array('robots', 'noindex, nofollow'), $this->get('template.' . 'robots', '
             <meta name="%key%" content="%value%"/>')) . "\r\n";
             }
-            $content = str_replace('
-            <head>', '
-            <head>' . $metas, $content);
-                return $content;
-                }
+        }
 
-                /**
-                * Check database whether certain Meta exist or not
-                *
-                * @param string $name Meta name
-                * @param integer $seo_id Foreign key to meta_data table to identify certain page
-                * @return boolean
-                *
-                */
-                private function isMetaExist($name, $seo_id)
-                {
-                global $db;
-                $sql = "SELECT *
+        $content = str_replace('<head>', '<head>' . $metas, $content);
+        return $content;
+    }
+
+    /**
+     * Check database whether certain Meta exist or not
+     *
+     * @param   string  $name   Meta name
+     * @param   integer $seo_id Foreign key to meta_data table to identify certain page
+     * @return  boolean
+     *
+     */
+    private function isMetaExist($name, $seo_id)
+    {
+        global $db;
+        $sql = "SELECT *
                 FROM " . TABLE_META_DATA . "
                 WHERE seo_id = :seo_id
                 AND meta_name = :meta_name";
 
-                $sql = $db->bindVars($sql, ":seo_id", $seo_id, 'string');
-                $sql = $db->bindVars($sql, ":meta_name", $name, 'string');
-                $result = $db->Execute($sql);
+        $sql = $db->bindVars($sql, ":seo_id", $seo_id, 'string');
+        $sql = $db->bindVars($sql, ":meta_name", $name, 'string');
+        $result = $db->Execute($sql);
 
-                if ($result->RecordCount() > 0) {
+        if ($result->RecordCount() > 0) {
 
-                return true;
-                }
+            return true;
+        }
 
-                return false;
-                }
+        return false;
+    }
 
-                /**
-                * Delete single meta with seo_id in table seo_meta and name
-                *
-                * @param integer $seo_id
-                * @param string $name
-                *
-                */
-                public function deleteSingleMeta($seo_id, $meta_name)
-                {
-                global $db;
-                $sql = "DELETE FROM " . TABLE_META_DATA . " WHERE seo_id = :seo_id AND meta_name = :meta_name";
-                $sql = $db->bindVars($sql, ":seo_id", $seo_id, 'integer');
-                $sql = $db->bindVars($sql, ":meta_name", $meta_name, 'string');
-                $db->Execute($sql);
+    private function checkRobots($page)
+    {
+        global $breadcrumb, $db;
+        if (!isset($robotsNoIndex)) $robotsNoIndex = false;
+        // might need isset($_GET['cPath']) later ... right now need $cPath or breaks breadcrumb from sidebox etc.
+        if (isset($cPath_array) && isset($cPath)) {
+            for ($i = 0, $n = sizeof($cPath_array); $i < $n; $i++) {
+                $categories_query = "select categories_name
+                           from " . TABLE_CATEGORIES_DESCRIPTION . "
+                           where categories_id = '" . (int)$cPath_array[$i] . "'
+                           and language_id = '" . (int)$_SESSION['languages_id'] . "'";
+
+                $categories = $db->Execute($categories_query);
+                //echo 'I SEE ' . (int)$cPath_array[$i] . '<br>';
+                if ($categories->RecordCount() > 0) {
+                    $breadcrumb->add($categories->fields['categories_name'], zen_href_link(FILENAME_DEFAULT, 'cPath=' . implode('_', array_slice($cPath_array, 0, ($i + 1)))));
+                } elseif (SHOW_CATEGORIES_ALWAYS == 0) {
+                    // if invalid, set the robots noindex/nofollow for this page
+                    $robotsNoIndex = true;
+                    break;
                 }
-                }
+            }
+        }
+        if (defined('ROBOTS_PAGES_TO_SKIP') && in_array($page, explode(",", constant('ROBOTS_PAGES_TO_SKIP'))) || $page == 'down_for_maintenance' || $robotsNoIndex === true) {
+
+            return true;
+        }
+
+        return false;
+    }
+}

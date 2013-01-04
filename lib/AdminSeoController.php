@@ -23,17 +23,21 @@ class AdminSeoController extends Controller
         //$meta = Plugin::get('riSeo.Metas')->injectMetas();
         $pages = Plugin::get('settings')->get("riSeo.exclude_pages");
 
-//        $ez_pages = $this->getEZPages();
-        $this->view->get('holder')->add('main', $this->view->render('riSeo::backend/manager.php', array('pages' => $pages)));
+        $ez_pages = $this->getEZPages();
+        $this->view->get('holder')->add('main', $this->view->render('riSeo::backend/manager.php', array('pages' => $pages, 'ez_pages' => $ez_pages)));
 
         return $this->render('riSeo::admin_layout.php');
     }
 
     public function ajaxGetPageMeta(Request $request)
     {
-        $page = $request->get('page');
 
-        $meta_data = Plugin::get('riSeo.Metas')->getMeta($page, true);
+        $split = explode('-', $request->get('page'));
+        $main_page = $split[0];
+        $page_id = (int)$split[1];
+
+        $meta_data = Plugin::get('riSeo.Metas')->getMeta($main_page, $page_id, true);
+
         if ($meta_data != null) {
 
             return $this->renderJson($meta_data);
@@ -45,10 +49,12 @@ class AdminSeoController extends Controller
 
     public function ajaxSavePageMeta(Request $request)
     {
-        $meta = array(
-            'seo_id' => $request->get('seo-id'),
-            'main_page' => $request->get('main-page')
-        );
+
+        $meta['seo_id'] = $request->get('seo-id');
+        $split = explode('-', $request->get('main-page'));
+        $meta['main_page'] = $split[0];
+        $meta['page_id'] = (int)$split[1];
+
         $meta_data_array = $request->get('metas');
 
         $additional_meta_name_array = $request->get('add-meta-name');
@@ -85,13 +91,18 @@ class AdminSeoController extends Controller
     private function getEZPages()
     {
         global $db;
-        $sql = "SELECT pages_id, pages_title
+        $sql = "SELECT *
                 FROM " . TABLE_EZPAGES;
 
         $result = $db->Execute($sql);
-
+        $ez_pages = array();
         if ($result->RecordCount() > 0) {
-            return true;
+            while (!$result->EOF) {
+                $ez_pages[$result->fields['pages_id']] = $result->fields['pages_title'];
+                $result->MoveNext();
+            }
         }
+
+        return $ez_pages;
     }
 }

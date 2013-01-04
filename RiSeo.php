@@ -29,7 +29,7 @@ class RiSeo extends PluginCore
     public function onPageEnd(Event $event)
     {
         $content = & $event->getContent();
-        $content = Plugin::get('riSeo.Metas')->processMeta($content);
+        $content = Plugin::get('riSeo.Metas')->processMeta($content, $_GET['main_page'], $_GET['id']);
         $event->setContent($content);
 
         return $event;
@@ -45,7 +45,7 @@ class RiSeo extends PluginCore
 //            $messageStack->add("Please remove meta tags in your 'html_header' file", 'error');
 //            return false;
 //        } else {
-            return Plugin::get('riCore.DatabasePatch')->executeSqlFile(file(__DIR__ . '/install/sql/install.sql'));
+        return Plugin::get('riCore.DatabasePatch')->executeSqlFile(file(__DIR__ . '/install/sql/install.sql'));
 //        }
 
     }

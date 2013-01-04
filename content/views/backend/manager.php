@@ -28,8 +28,11 @@ $riview->get('loader')->load(array('jquery.lib', 'bootstrap.lib', 'jquery.ui.lib
                         foreach ($pages as $page) {
                             echo "<option value='" . $page . "'>" . $page . "</option>";
                         }
+
+                        foreach ($ez_pages as $key => $value) {
+                            echo "<option value=page-" . $key . ">" . $value . "</option>";
+                        }
                         ?>
-                        <option value="Hi">HI</option>
                     </select>
                 </div>
             </div>
@@ -119,20 +122,20 @@ $riview->get('loader')->load(array('jquery.lib', 'bootstrap.lib', 'jquery.ui.lib
                                 </label>
                             </div>
                         </div>
-<!--                        <div class="control-group">-->
-<!--                            <a class="control-label"-->
-<!--                               title=""">--><?php //rie('Options') ?><!--</a>-->
-<!--                            <div class="controls">-->
-<!--                                <label class="checkbox">-->
-<!--                                    <input type="checkbox" value="noarchive" name="metas[robots]">-->
-<!--                                    NOARCHIVE-->
-<!--                                </label>-->
-<!--                                <label class="checkbox">-->
-<!--                                    <input type="checkbox" value="nosnippet" name="metas[robots]">-->
-<!--                                    NOSNIPPET-->
-<!--                                </label>-->
-<!--                            </div>-->
-<!--                        </div>-->
+                        <!--                        <div class="control-group">-->
+                        <!--                            <a class="control-label"-->
+                        <!--                               title=""">--><?php //rie('Options') ?><!--</a>-->
+                        <!--                            <div class="controls">-->
+                        <!--                                <label class="checkbox">-->
+                        <!--                                    <input type="checkbox" value="noarchive" name="metas[robots]">-->
+                        <!--                                    NOARCHIVE-->
+                        <!--                                </label>-->
+                        <!--                                <label class="checkbox">-->
+                        <!--                                    <input type="checkbox" value="nosnippet" name="metas[robots]">-->
+                        <!--                                    NOSNIPPET-->
+                        <!--                                </label>-->
+                        <!--                            </div>-->
+                        <!--                        </div>-->
                     </div>
                     <div class="input-group" id="additional-meta-input-group">
                         <div class="control-group" id="addtional-metas">
@@ -158,9 +161,9 @@ $riview->get('loader')->load(array('jquery.lib', 'bootstrap.lib', 'jquery.ui.lib
                     </div>
                 </form>
             </div>
-            <button title="Reset default" type="button" class='btn' id='toggle'>
-                Toggle
-            </button>
+<!--            <button title="Reset default" type="button" class='btn' id='toggle'>-->
+<!--                Toggle-->
+<!--            </button>-->
             <div class='clearBoth'></div>
         </div>
     </div>
