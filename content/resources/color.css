@@ -1,0 +1,13 @@
+.meta-input {
+    border-color: #DFDFDF;
+}
+
+.controls input {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+}
+
+.helpers input {
+    background-color: #EEEEEE;
+    cursor: text;
+}

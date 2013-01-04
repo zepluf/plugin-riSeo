@@ -1,0 +1,112 @@
+.title {
+    margin: 10px;
+}
+
+.master-wrapper {
+
+}
+
+.content-presenter {
+    margin: auto;
+    text-align: center;
+}
+
+.controls input {
+    background-color: #FFFFFF;
+    border: 1px solid #CCCCCC;
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+    transition: border 0.2s linear 0s, box-shadow 0.2s linear 0s;
+}
+
+#save-button {
+    margin: 10px;
+}
+
+.hide-if-no-js {
+    display: none;
+}
+
+.ui-combobox {
+    position: relative;
+    display: inline-block;
+}
+
+.ui-combobox-toggle {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    margin-left: -1px;
+    padding: 0;
+    /* adjust styles for IE 6/7 */
+    *height: 1.7em;
+    *top: 0.1em;
+}
+
+.ui-combobox-input {
+    margin: 0;
+    padding: 0.3em;
+}
+
+#meta-control {
+    margin: 20px auto;
+    border: 2px solid #DFDFDF;
+    width: 500px;
+    padding: 10px;
+}
+
+.controls input {
+    height: auto;
+}
+
+.form-table textarea {
+
+}
+
+#selector {
+    margin: 10px;
+    z-index: 2;
+}
+
+a {
+    cursor: help;
+}
+
+.controls {
+    margin: 5px;;
+}
+
+.helpers label {
+    font-size: 11px;
+}
+
+.helpers input {
+    width: auto;
+    height: auto;
+    font-size: 11px;
+}
+
+.addtional-meta-group input {
+    margin-right: 29px;
+    margin-bottom: 10px;
+}
+
+#loading-holder {
+    background: #ffffff;
+    width: 100%;
+    height: 100%;
+    position:absolute;
+    z-index: 1;
+    margin: auto;
+}
+
+#loading {
+
+    width:100%; /*image width */
+    height:100%; /*image height */
+    /*left:50%;*/
+    /*top:50%;*/
+    /*margin-left:-200px; *//*image width/2 */
+    /*margin-top:-200px; *//*image height/2 */
+    background: url("loading.gif") no-repeat center;
+
+}
