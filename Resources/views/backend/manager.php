@@ -10,7 +10,7 @@
 <?php
 $view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.ui.lib', 'jquery.form.lib', 'riSeo:js/SeoScript.js', 'riSeo:css/main-style.css', 'riSeo:css/color.css'));
 ?>
-<div class='title pull-left'><h3><?php $view['translator']->trans('Meta SEO Manager')?></h3></div>
+<div class='title pull-left'><h3><?php echo $view['translator']->trans('Meta SEO Manager')?></h3></div>
 <div class='clearfix'></div>
 <div class="master-wrapper" id="seo-master">
     <div id="dialog-confirm" title="Delete meta?">
@@ -54,7 +54,7 @@ $view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.ui.lib', 'jqu
                     <div class="input-group" id="default-meta-input-group">
                         <div class="control-group">
                             <a class="control-label"
-                               title="This will be the title of your page. If not set, the default title will get used."><?php $view['translator']->trans('Title') ?></a>
+                               title="This will be the title of your page. If not set, the default title will get used."><?php echo $view['translator']->trans('Title') ?></a>
 
                             <div class="controls">
                                 <textarea class="meta-input" name="metas[title]" id="meta-title"
@@ -71,7 +71,7 @@ $view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.ui.lib', 'jqu
 
                         <div class="control-group">
                             <a class="control-label"
-                               title="The META description for your page."><?php $view['translator']->trans('Description') ?></a>
+                               title="The META description for your page."><?php echo $view['translator']->trans('Description') ?></a>
 
                             <div class="controls">
                                 <textarea class="meta-input" name="metas[description]" id="meta-description"
@@ -87,7 +87,7 @@ $view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.ui.lib', 'jqu
 
                         <div class="control-group">
                             <a class="control-label"
-                               title="A comma separated list of the most important keywords. Use optimal number of keywords."><?php $view['translator']->trans('Keywords') ?></a>
+                               title="A comma separated list of the most important keywords. Use optimal number of keywords."><?php echo $view['translator']->trans('Keywords') ?></a>
 
                             <div class="controls">
                                 <textarea class="meta-input" name="metas[keywords]" id="meta-keywords"
@@ -141,7 +141,7 @@ $view['loader']->load(array('jquery.lib', 'bootstrap.lib', 'jquery.ui.lib', 'jqu
                     <div class="input-group" id="additional-meta-input-group">
                         <div class="control-group" id="addtional-metas">
                             <a class="control-label"
-                               title=""><?php $view['translator']->trans('Additional Meta Tag') ?></a>
+                               title=""><?php echo $view['translator']->trans('Additional Meta Tag') ?></a>
                         </div>
                         <button title="Add new" type="button" class='btn btn-info' id='add-meta-button'
                                 disabled="disabled"><i
